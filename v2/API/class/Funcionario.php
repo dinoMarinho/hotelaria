@@ -29,8 +29,7 @@ class Funcionario {
 
     public function getConn(){ return $this->conn; }
 
-    public function encryptPassword($password){ 
-        // Criptografia hash 
+    public function encryptPassword($password){
         $password_hash = trim(password_hash($password, PASSWORD_DEFAULT));
         return $password_hash; 
     }
