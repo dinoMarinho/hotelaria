@@ -27,8 +27,6 @@
         
         public function getComission(){ return $this->commission; }
 
-        private function getConn(){ return $this->conn; }
-
         public function encryptPassword($password){
             $password_hash = trim(password_hash($password, PASSWORD_DEFAULT));
             return $password_hash; 
@@ -89,7 +87,7 @@
                     //  Pega todos os dados do usuário e atribui a variável
                     $data = $stmt->fetchAll();
                     
-                    // 
+                    // Varre dado por dado da busca
                     foreach ($data as $row) {
                         // Verifica se o hash é valido na senha
                         if(password_verify($password, $row['senha'])){
@@ -104,7 +102,7 @@
                         }
                     }
 
-                 }else{
+                 } else {
                     $result = array('code' => 0, 'message'=> 'Funcionário sem cadastro encontrado!!');
                  }
 
@@ -128,13 +126,12 @@
                 $stmt->bindParam(":id", $id);
                 $stmt->execute();      
 
-            
                 // Executa a query
                 $stmt->execute();
 
                 if ($stmt->rowCount() > 0) {
                     $result = array('code' => 1, 'message'=> 'Funcionário deletado com sucesso!!');
-                }else{
+                } else {
                     $result = array('code' => 0, 'message'=> 'Funcionário não encontrado!!');
                 }
 
@@ -147,5 +144,76 @@
       
             return $result;
         }
+
+        public function getInformation($id){
+            // Pega as informações do funcinário
+            $info = $this->information($id);
+
+            if (isset($info['code'])) {
+                if ($info['code'] == 1){
+                    $result = array(
+                        'code' => 1, 
+                        'id'    => $info['id'],
+                        'name'  => $info['name'],
+                        'email' => $info['email'],
+                        'comission' => $info['comission']
+                    );
+                } else {
+                    $result = array('code' => 1, 'message'=> 'Não achou o funcinário');
+                }
+            } else{
+                $result = array('code' => 0, 'message'=> 'Não achou o código');
+            }
+
+            return $result;
+        }
+
+        /*
+            @method privates
+        */
+
+        private function getConn(){ return $this->conn; }
+
+        private function information($id){
+            // Pega os dados da conexão com a base de dados
+            $conn = $this->getConn();
+
+            try{
+                // Prepara a query e junta os valores
+                $stmt = $conn->prepare("SELECT * FROM funcionarios WHERE id=:id");
+                $stmt->bindParam(":id", $id);
+                $stmt->execute();
+
+                // Verifica se o usuário existe
+                if ($stmt->rowCount() > 0) {
+                   // Pega todos os dados do usuário e atribui a variável
+                   $data = $stmt->fetchAll();
+                   
+                   // Varre dado por dado da busca
+                   foreach ($data as $row) {
+                        $result = array(
+                            'code'  => 1,
+                            'id'    => $row['id'],
+                            'name'  => $row['nome'],
+                            'email' => $row['email'],
+                            'senha' => $row['senha'],
+                            'comission' => $row['comissao'],
+                        );
+                   }
+                   
+                } else {
+                   $result = array('code' => 0, 'message'=> 'Funcionário sem cadastro encontrado!!');
+                }
+
+            } catch(PDOException $e){
+                $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de buscar dados no banco de dados!Erro: '.$e->getMessage());
+            }
+
+            $stmt = null;
+            $conn = null;
+      
+            return $result;
+        }
+        
     }
 ?>
