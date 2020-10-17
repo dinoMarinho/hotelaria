@@ -1,0 +1,92 @@
+https://stackoverflow.com/questions/26846500/from-node-js-request-json-file-to-php
+
+
+PHP:
+
+$data = array('message' => 'HeLLO');
+$json = json_encode($data);
+print_r($json);
+
+
+
+Javascript:
+
+var request = require('request');
+request('http://IP/File.php', function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    data = JSON.parse(body)[0];
+  }
+})
+
+
+https://www.youtube.com/watch?v=F1bLyT55BWM 
+
+Senha criptografada
+
+
+DECODE JWT 
+
+try {
+    $key = "secret";
+    $token = "abc"
+    $data = JWT::decode($token, $key, array('HS256'));
+} catch (\Exception $e) { // Also tried JwtException
+    echo 'error';
+}
+
+
+UNCODE
+
+//Application Key
+$key = '';
+
+//Header Token
+$header = [
+    'typ' => 'JWT',
+    'alg' => 'HS256'
+];
+
+//Payload - Content
+$payload = [
+    'exp' => (new DateTime("now"))->getTimestamp(),
+    'uid' => 1,
+    'email' => 'email@email.com',
+];
+
+//JSON
+$header = json_encode($header);
+$payload = json_encode($payload);
+
+//Base 64
+$header = base64_encode($header);
+$payload = base64_encode($payload);
+
+//Sign
+$sign = hash_hmac('sha256', $header . "." . $payload, $key, true);
+$sign = base64_encode($sign);
+
+//Token
+$token = $header . '.' . $payload . '.' . $sign;
+
+print $token;
+
+
+
+    /*
+    try {
+        $key = "";
+        $token = "abc"
+        $token_validate = JWT::decode($token, $key, array('HS256'));
+        if(!$token_validate){
+            $data = array('message' => 'Token Invalido! ');
+            $json = json_encode($data);
+            print_r($json);
+            die();
+        }
+    } catch (\Exception $e) { // Also tried JwtException
+        $data = array('message' => 'Erro de token ');
+        $json = json_encode($data);
+        print_r($json);
+        die();
+    }
+    */
