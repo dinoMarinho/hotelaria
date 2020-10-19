@@ -5,11 +5,11 @@
     include('../../config/dbConnection.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-        $mail = (isset($_POST['mail'])) ? $_POST['mail'] : '' ;
-        $password = (isset($_POST['password'])) ? $_POST['password'] : '' ;
+        $id = (isset($_POST['id'])) ? $_POST['id'] : '' ;
+        $value = (isset($_POST['value'])) ? $_POST['value'] : '' ;
     }else{
-        $mail = (isset($_GET['mail'])) ? $_GET['mail'] : '' ;
-        $password = (isset($_GET['password'])) ? $_GET['password'] : '' ;
+        $id = (isset($_GET['id'])) ? $_GET['id'] : '' ;
+        $value = (isset($_GET['value'])) ? $_GET['value'] : '' ;
     }
 
     // Verifica se qual o método de envio dos dados
@@ -17,17 +17,13 @@
     $validate = false;
 
     // Verifica se o e-mail é valido
-    if (is_null($mail) or filter_var($mail, FILTER_VALIDATE_EMAIL)==false) {
-        $msg .= 'E-mail vazio ou inválido,';
+    if (is_null($id) or !is_numeric($id)) {
+        $msg .= 'A identificação do funcionário está vazia ou inválido,';
         $validate = true;
     }
-
-    // Tira os espaços iniciais da senha se existir
-    $f_password = preg_replace("/\s+/", "", $password);
-
-    // Verifica se a senha não está vazia, se tem mais de 10 caracteres, se tem pelo menos 1 um caractere especial e se tem pelo menos 1 letra maiúscula
-    if (is_null($f_password)) {
-        $msg .= 'Senha vazia, ';
+    
+    if (is_null($value) or !is_numeric($value)) {
+        $msg .= 'O valor da comissão do funcionário está vazia ou inválido,';
         $validate = true;
     }
 
@@ -42,8 +38,7 @@
 
     $Funcionario = new Funcionario($conn);
 
-    $result = $Funcionario->validate($mail, $password);
-
+    $result = $Funcionario->includeComission($id,$value);
 
     $json = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     print_r($json);

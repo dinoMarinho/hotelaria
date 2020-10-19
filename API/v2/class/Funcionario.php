@@ -73,45 +73,25 @@
         }
 
         public function validate($mail, $password){
-            // Pega os dados da conexão com a base de dados
-            $conn = $this->getConn();
+        
+            // Pega as informações do funcinário
+            $info = $this->information($mail);
 
-            try{
-                 // Prepara a query e junta os valores
-                 $stmt = $conn->prepare("SELECT * FROM funcionarios WHERE email=:mail");
-                 $stmt->bindParam(":mail", $mail);
-                 $stmt->execute();
- 
-                 // Verifica se o usuário existe
-                 if ($stmt->rowCount() > 0) {
-                    //  Pega todos os dados do usuário e atribui a variável
-                    $data = $stmt->fetchAll();
-                    
-                    // Varre dado por dado da busca
-                    foreach ($data as $row) {
-                        // Verifica se o hash é valido na senha
-                        if(password_verify($password, $row['senha'])){
-                            $result = array(
-                                'code'  => 1,
-                                'id'    => $row['id'],
-                                'name'  => $row['nome'],
-                                'email' => $row['email']
-                            );
-                        }else{ 
-                            $result = array('code' => 0, 'message'=> 'Senha inválida');    
-                        }
-                    }
-
-                 } else {
-                    $result = array('code' => 0, 'message'=> 'Funcionário sem cadastro encontrado!!');
-                 }
-
-            } catch(PDOException $e) {
-                $result = array('code' => 0, 'message'=> 'Houve um erro na validação no banco de dados!Erro: '.$e->getMessage());
+            if (isset($info['code']) && $info['code'] == 1) {
+                if(password_verify($password, $info['password'])){
+                    $result = array(
+                        'code'    => 1,
+                        'id'      => $info['id'],
+                        'name'    => $info['name'],
+                        'email'   => $info['email'],
+                        'message' => 'Funcionário logado com sucesso!!'
+                    );
+                }else{ 
+                        $result = array('code' => 0, 'message'=> 'Senha inválida');    
+                }
+            } else{
+                $result = array('code' => 0, 'message'=> 'Funcionário sem cadastro encontrado!!');
             }
-
-            $stmt = null;
-            $conn = null;
       
             return $result;
         }
@@ -149,20 +129,58 @@
             // Pega as informações do funcinário
             $info = $this->information($id);
 
-            if (isset($info['code'])) {
-                if ($info['code'] == 1){
-                    $result = array(
-                        'code' => 1, 
-                        'id'    => $info['id'],
-                        'name'  => $info['name'],
-                        'email' => $info['email'],
-                        'comission' => $info['comission']
-                    );
-                } else {
-                    $result = array('code' => 1, 'message'=> 'Não achou o funcinário');
-                }
-            } else{
-                $result = array('code' => 0, 'message'=> 'Não achou o código');
+            if (isset($info['code']) && $info['code'] == 1) {
+                $result = array(
+                    'code' => 1, 
+                    'id'    => $info['id'],
+                    'name'  => $info['name'],
+                    'email' => $info['email'],
+                    'comission' => $info['comission']
+                );
+            } else {
+                $result = array('code' => 0, 'message'=> $info['message']);
+            }
+
+            return $result;
+        }
+
+        public function includeComission($id,$value){
+             // Pega as informações do funcinário
+             $info = $this->information($id);
+
+             if (isset($info['code']) && $info['code'] == 1) {
+                    if(is_null($info['comission'])){
+                        $old_comission = 0;
+                    }else{
+                        $old_comission = $info['comission'];
+                    }
+                    $new_value = $this->moeda($info['comission'] + $value);
+
+                    // Pega os dados da conexão com a base de dados
+                    $conn = $this->getConn();
+
+                    try{
+                        $stmt = $conn->prepare("UPDATE funcionarios set comissao=:comissao WHERE id=:id");
+                        $stmt->bindParam(":id", $id);
+                        $stmt->bindParam(":comissao", $new_value);
+                        $stmt->execute();
+
+                        // Verifica se o usuário existe
+                        if ($stmt->rowCount() > 0) {
+                            $result = array('code' => 1, 'message'=> 'A comissão foi adicionada com sucesso!');
+                        } else {
+                            $result = array('code' => 0, 'message'=> 'Houve um erro ao incluir a comissão no funcinário!');
+                        }
+                    }catch(PDOException $e){
+                        $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de buscar dados no banco de dados!Erro: '.$e->getMessage());
+                    }
+                            
+                    $stmt = null;
+                    $conn = null;
+
+                
+            } else {
+                $result = array('code' => 0, 'message'=> $info['message']);
             }
 
             return $result;
@@ -174,14 +192,20 @@
 
         private function getConn(){ return $this->conn; }
 
-        private function information($id){
+        private function information($info){
             // Pega os dados da conexão com a base de dados
             $conn = $this->getConn();
 
             try{
-                // Prepara a query e junta os valores
-                $stmt = $conn->prepare("SELECT * FROM funcionarios WHERE id=:id");
-                $stmt->bindParam(":id", $id);
+
+                if(is_numeric($info)){
+                    $stmt = $conn->prepare("SELECT * FROM funcionarios WHERE id=:id");
+                    $stmt->bindParam(":id", $info);
+                } else {
+                    $stmt = $conn->prepare("SELECT * FROM funcionarios WHERE email=:mail");
+                    $stmt->bindParam(":mail", $info);
+                }
+
                 $stmt->execute();
 
                 // Verifica se o usuário existe
@@ -196,7 +220,7 @@
                             'id'    => $row['id'],
                             'name'  => $row['nome'],
                             'email' => $row['email'],
-                            'senha' => $row['senha'],
+                            'password' => $row['senha'],
                             'comission' => $row['comissao'],
                         );
                    }
@@ -213,6 +237,13 @@
             $conn = null;
       
             return $result;
+        }
+
+        private static function moeda($get_valor) {
+            $source = array('.', ',');
+            $replace = array('', '.');
+            $valor = str_replace($source, $replace, $get_valor); //remove os pontos e substitui a virgula pelo ponto
+            return $valor; //retorna o valor formatado para gravar no banco
         }
         
     }

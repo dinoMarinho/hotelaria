@@ -1,8 +1,8 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
 
-    include_once('../class/Funcionario.php');
-    include('../config/dbConnection.php');
+    include_once('../../class/Funcionario.php');
+    include('../../config/dbConnection.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
         $name = (isset($_POST['name'])) ? $_POST['name'] : '' ;
