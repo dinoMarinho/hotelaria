@@ -132,7 +132,6 @@
             if (isset($info['code']) && $info['code'] == 1) {
                 $result = array(
                     'code' => 1, 
-                    'id'    => $info['id'],
                     'name'  => $info['name'],
                     'email' => $info['email'],
                     'comission' => $info['comission']
