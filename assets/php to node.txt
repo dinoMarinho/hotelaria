@@ -90,3 +90,6 @@ print $token;
         die();
     }
     */
+
+
+    http://blog.thiagobelem.net/criando-logs-com-php
