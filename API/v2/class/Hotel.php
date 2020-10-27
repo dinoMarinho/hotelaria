@@ -15,7 +15,7 @@
 
         public function setReceita($receita){$this->receita = $receita;}
 
-        public function setqtdeQuartos($qtdeQuartos){$this->qtdeQuartos = $qtdeQuartos;}
+        public function setQtdeQuartos($qtdeQuartos){$this->qtdeQuartos = $qtdeQuartos;}
         
         public function setLucro($lucro){$this->lucro = $lucro;}
 
@@ -23,6 +23,17 @@
 
         public function setComissoes($comissoes){$this->comissoes = $comissoes;}
 
-        public function setquartosVendidos($quartosVendidos){$this->quartosVendidos = $quartosVendidos;}
+        public function setQuartosVendidos($quartosVendidos){$this->quartosVendidos = $quartosVendidos;}
+
+        public function getReceita(){ return $this->receita; }
+
+        public function getQtdeQuartos(){ return $this->qtdeQuartos; }
+
+        public function getLucro(){ return $this->lucro; }
+
+        public function getDiaria(){ return $this->diaria; }
+
+        public function getQuartosVendidos(){ return $this->quartosVendidos; }
+
     }
 ?>

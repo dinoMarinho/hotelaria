@@ -30,15 +30,16 @@
             return $valor; //retorna o valor formatado para gravar no banco
         }
 
-        public function include($tipo,$valorDiaria){
+        public function include($hotel_id,$tipo,$valorDiaria){
             // Pega os dados da conexão com a base de dados
             $conn = $this->getConn();
 
             try {
                 // Insere o usuário no banco de dados
-                $stmt = $conn->prepare("INSERT INTO quartos (tipo, valorDiaria) VALUES (:tipo, :valor)");
+                $stmt = $conn->prepare("INSERT INTO quartos (tipo, valorDiaria,hotel_id) VALUES (:tipo, :valor,:hotel)");
                 $stmt->bindParam(':tipo', $tipo);
                 $stmt->bindParam(':valor', $valorDiaria);
+                $stmt->bindParam(':valor', $hotel_id);
 
                  // Executa a query
                  $stmt->execute();
@@ -79,7 +80,8 @@
                             'id'   => $row['id'],
                             'tipo' => $row['tipo'],
                             'valorDiaria' => $row['valorDiaria'],
-                            'lucroOp' => $row['lucroOp']
+                            'lucroOp' => $row['lucroOp'],
+                            'hotel_id' => $row['hotel']
                         ];
                         $i++;                 
                     }
@@ -124,7 +126,8 @@
                             'id'   => $row['id'],
                             'tipo' => $row['tipo'],
                             'valorDiaria' => $row['valorDiaria'],
-                            'lucroOp' => $row['lucroOp']
+                            'lucroOp' => $row['lucroOp'],
+                            'hotel_id' => $row['hotel']
                         ];
                         $i++;                 
                     }
