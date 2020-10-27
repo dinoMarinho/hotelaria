@@ -1,6 +1,8 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
 
+    include_once('../../class/Log.php');
+
     include_once('../../class/Quarto.php');
     include('../../config/dbConnection.php');
 
@@ -12,7 +14,6 @@
         $valorDiaria = (isset($_GET['valorDiaria'])) ? $_GET['valorDiaria'] : '' ;
     }
 
-    // Verifica se qual o método de envio dos dados
     $msg = '';
     $validate = false;
 
@@ -40,6 +41,16 @@
     $Quarto = new Quarto($conn);
 
     $result = $Quarto->include($tipo, $valorDiaria);
+
+    $Log = new Log($conn);
+
+    if (isset($result['code']) && $result['code'] == 1 ){
+        $msg = 'Incluiu um quarto do Tipo:' .$tipo. ' com a diária no valor de:'. $valorDiaria;
+    }else{
+        $msg = 'Tentou incluir um quarto do Tipo:' .$tipo. ' com a diária no valor de:'. $valorDiaria;
+    }   
+
+    $log_result = $Log->insert($msg);
 
     $json = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     print_r($json);

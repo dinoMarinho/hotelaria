@@ -1,6 +1,8 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
 
+    include_once('../../class/Log.php');
+
     include_once('../../class/Funcionario.php');
     include('../../config/dbConnection.php');
 
@@ -39,6 +41,16 @@
     $Funcionario = new Funcionario($conn);
 
     $result = $Funcionario->includeComission($id,$value);
+
+    $Log = new Log($conn);
+
+    if (isset($result['code']) && $result['code'] == 1 ){
+        $msg = 'Incluiu a comissão ao usuário com ID: '. $id. 'no valor de: '.$value;
+    }else{
+        $msg = 'Tentou incluir uma comissão ao usuário com ID: '. $id. 'no valor de: '.$value;
+    }   
+
+    $log_result = $Log->insert($msg);
 
     $json = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     print_r($json);

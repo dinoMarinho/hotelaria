@@ -1,6 +1,8 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
 
+    include_once('../../class/Log.php');
+
     include_once('../../class/Quarto.php');
     include('../../config/dbConnection.php');
 
@@ -39,6 +41,16 @@
     $Quarto = new Quarto($conn);
 
     $result = $Quarto->includelucroOp($id,$value);
+
+    $Log = new Log($conn);
+
+    if (isset($result['code']) && $result['code'] == 1 ){
+        $msg = 'Incluiu o Lucro Operacional ao quarto com ID: '. $id. 'no valor de: '.$value;
+    }else{
+        $msg = 'Tentou incluir um Lucro Operacional ao quarto com ID: '. $id. 'no valor de: '.$value;
+    }   
+
+    $log_result = $Log->insert($msg);
 
     $json = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     print_r($json);

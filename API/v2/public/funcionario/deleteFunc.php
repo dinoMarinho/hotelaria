@@ -1,6 +1,8 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
 
+    include_once('../../class/Log.php');
+
     include_once('../../class/Funcionario.php');
     include('../../config/dbConnection.php');
 
@@ -32,6 +34,16 @@
     $Funcionario = new Funcionario($conn);
 
     $result = $Funcionario->delete($id);
+
+    $Log = new Log($conn);
+    
+    if (isset($result['code']) && $result['code'] == 1 ){
+        $msg = 'Deletou um usuário que possuia o ID: '. $id;
+    }else{
+        $msg = 'Tentou deletou um usuário que possui o ID: '. $id;
+    }   
+
+    $log_result = $Log->insert($msg);
 
 
     $json = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

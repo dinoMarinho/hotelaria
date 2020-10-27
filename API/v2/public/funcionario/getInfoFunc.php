@@ -1,6 +1,8 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
 
+    include_once('../../class/Log.php');
+
     include_once('../../class/Funcionario.php');
     include('../../config/dbConnection.php');
 
@@ -32,6 +34,16 @@
     $Funcionario = new Funcionario($conn);
 
     $result = $Funcionario->getInformation($id);
+
+    $Log = new Log($conn);
+
+    if (isset($result['code']) && $result['code'] == 1 ){
+        $msg = 'Pegou todas as informações do usuário com ID: '. $id;
+    }else{
+        $msg = 'Tentou pegar todas as informações do usuário com ID: '. $id;
+    }   
+
+    $log_result = $Log->insert($msg);
 
 
     $json = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
