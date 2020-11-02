@@ -21,7 +21,7 @@ Lembrando que a API sempre retorna dois códigos:
 
 
 # Funcionário
-Para acessar as informações funcionários é necessário utilizar:
+Para acessar as informações dos funcionários é necessário utilizar:
 
 ```sh
 $ .../API/funcionario/<...>.php
@@ -30,13 +30,13 @@ $ .../API/funcionario/<...>.php
 | Página | Entradas | Saídas |
 | ------ | ------ | ------ |
 | validateFunc.php | E-mail e senha | Code, id, name, mail e  menssage |
-| includeFunc.php | Nome, e-mail e senha | Code e menssage |
+| includeFunc.php | Nome, e-mail, senha e ID do hotel | Code e menssage |
 | getInfoFunc.php | ID | Code, name, email, comission e message |
 | deleteFunc.php | ID | Code e menssage |
-| InsertComissionFunc.php | ID e Valor da comissão | Code e menssage |
+| InsertComissionFunc.php | ID, Valor da comissão e ID do hotel | Code e menssage |
 
 # Quarto
-Para acessar as informações funcionários é necessário utilizar:
+Para acessar as informações dos quartos é necessário utilizar:
 ```sh
 $ .../API/quarto/<...>.php
 ```
@@ -44,7 +44,23 @@ $ .../API/quarto/<...>.php
 | Página | Entradas | Saídas |
 | ------ | ------ | ------ |
 | getQuarto.php | ID | Tipo, valorDiária e lucroOp |
-| includeQuarto.php | Tipo e valorDiária | Code e menssage |
+| includeQuarto.php | ID do hotel, tipo e valorDiária | Code e menssage |
 | includeLucro.php | ID e valor do Lucro | Code e menssage |
 
+# Hotel
+Para acessar as informações do hotel é necessário utilizar:
+```sh
+$ .../API/hotel/<...>.php
+```
 
+| Página | Entradas | Saídas |
+| ------ | ------ | ------ |
+| getHotel.php | ID | Code, id, receita, qtdeQuartos, lucro, comissaoGeral, quartosVendidos, nome |
+| includeHotel.php | Nome | Code e menssage |
+| updateReceita.php | ID e Valor da receita | Code e menssage |
+| updateLucro.php | ID e Valor do Lucro | Code e menssage |
+| updateQuartosVendidos.php | ID e Valor da quantidade de quartos vendidos | Code e menssage |
+| revPar.php | ID do hotel | Code, menssage e value |
+| netRevPar.php | ID do hotel | Code, menssage e value |
+| diariaMedia.php | ID do hotel | Code, menssage e value |
+| taxaOcupacao.php | ID do hotel | Code, menssage e value |

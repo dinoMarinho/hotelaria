@@ -10,10 +10,12 @@
         $name = (isset($_POST['name'])) ? $_POST['name'] : '' ;
         $mail = (isset($_POST['mail'])) ? $_POST['mail'] : '' ;
         $password = (isset($_POST['password'])) ? $_POST['password'] : '' ;
+        $hotel_id = (isset($_POST['hotel_id'])) ? $_POST['hotel_id'] : '' ;
     }else{
         $name = (isset($_GET['name'])) ? $_GET['name'] : '' ;
         $mail = (isset($_GET['mail'])) ? $_GET['mail'] : '' ;
         $password = (isset($_GET['password'])) ? $_GET['password'] : '' ;
+        $hotel_id = (isset($_GET['hotel_id'])) ? $_GET['hotel_id'] : '' ;
     }
 
     // Verifica se qual o método de envio dos dados

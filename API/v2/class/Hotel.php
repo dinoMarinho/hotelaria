@@ -179,6 +179,108 @@
             return $result;
         }
 
+        public function updateQuartosVendidos($id,$value){ 
+
+            $info = $this->getHotel($id);
+
+            if (isset($info['code']) && $info['code'] == 1) {
+                
+                try{
+                    $stmt = $conn->prepare("UPDATE hotel set quartosVendidos=:quartosVendidos WHERE id=:id");
+                    $stmt->bindParam(":id", $id);
+                    $stmt->bindParam(":quartosVendidos", $value);
+                    $stmt->execute();
+
+                    // Verifica se o usuário existe
+                    if ($stmt->rowCount() > 0) {
+                        $result = array('code' => 1, 'message'=> 'A quantidade de quartos vendidos foi atualizada com sucesso no hotel '. $info['nome']);
+                    } else {
+                        $result = array('code' => 0, 'message'=> 'Houve um erro ao atualizar a quantidade de quartos vendidos do hotel '. $info['nome']);
+                    }
+
+                } catch(PDOException $e) {
+                    $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de buscar dados no banco de dados!Erro: '.$e->getMessage());
+                }
+
+            } else {
+                $result = array('code' => 0, 'message'=> $info['message']);
+            }
+            
+            return $result;
+        }
+
+        public function getREVPAR($id){
+            $info = $this->getHotel($id);
+
+            if (isset($info['code']) && $info['code'] == 1) {
+                try{
+                    $revPar = $info['receita'] / $info['qtdeQuartos'];
+
+                    $result = array('code' => 1, 'message'=> 'Cálculo realizado com sucesso!!', 'value' => $revPar);
+                }catch (Exception $e){
+                    $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de realizar o cálculo!Erro: '.$e->getMessage());
+                }
+            }else {
+                $result = array('code' => 0, 'message'=> $info['message']);
+            }
+
+            return $result;
+        }
+
+        public function getNETREVPAR($id){
+            $info = $this->getHotel($id);
+            
+            if (isset($info['code']) && $info['code'] == 1) {
+                try{
+                    $netRevPar = ($info['receita'] - $info['comissaoGeral']) / $info['qtdeQuartos'];
+
+                    $result = array('code' => 1, 'message'=> 'Cálculo realizado com sucesso!!', 'value' => $netRevPar);
+                }catch (Exception $e){
+                    $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de realizar o cálculo!Erro: '.$e->getMessage());
+                }
+            }else {
+                $result = array('code' => 0, 'message'=> $info['message']);
+            }
+
+            return $result;
+        }
+
+        public function getDiariaMedia($id){
+            $info = $this->getHotel($id);
+            
+            if (isset($info['code']) && $info['code'] == 1) {
+                try{
+                    $diariaMedia = $info['receita'] / $info['quartosVendidos'];
+
+                    $result = array('code' => 1, 'message'=> 'Cálculo realizado com sucesso!!', 'value' => $diariaMedia);
+                }catch (Exception $e){
+                    $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de realizar o cálculo!Erro: '.$e->getMessage());
+                }
+            }else {
+                $result = array('code' => 0, 'message'=> $info['message']);
+            }
+
+            return $result;
+        }
+
+        public function getTaxaOcupacap($id){
+            $info = $this->getHotel($id);
+            
+            if (isset($info['code']) && $info['code'] == 1) {
+                try{
+                    $taxaOcupacao = $info['quartosVendidos'] / $info['qtdeQuartos'];
+
+                    $result = array('code' => 1, 'message'=> 'Cálculo realizado com sucesso!!', 'value' => $taxaOcupacao);
+                }catch (Exception $e){
+                    $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de realizar o cálculo!Erro: '.$e->getMessage());
+                }
+            }else {
+                $result = array('code' => 0, 'message'=> $info['message']);
+            }
+
+            return $result;
+        }
+
 
     }
 ?>
