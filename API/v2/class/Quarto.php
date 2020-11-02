@@ -35,21 +35,44 @@
             $conn = $this->getConn();
 
             try {
-                // Insere o usuário no banco de dados
-                $stmt = $conn->prepare("INSERT INTO quartos (tipo, valorDiaria,hotel_id) VALUES (:tipo, :valor,:hotel)");
-                $stmt->bindParam(':tipo', $tipo);
-                $stmt->bindParam(':valor', $valorDiaria);
-                $stmt->bindParam(':valor', $hotel_id);
 
-                 // Executa a query
-                 $stmt->execute();
+                // Prepara a query e junta os valores
+                $stmt_check = $conn->prepare("SELECT * FROM hotel WHERE id=:id");
+                $stmt_check->bindParam(":id", $hotel_id);
+                $stmt_check->execute();
 
-                 $result = array('code' => 1, 'message'=> 'Quarto incluído com sucesso');
+                // Verifica se o usuário já foi cadastrado
+                if ($stmt_check->rowCount() == 0) {
+                    // Insere o usuário no banco de dados
+                    $stmt = $conn->prepare("INSERT INTO quartos (tipo, valorDiaria,hotel_id) VALUES (:tipo, :valor,:hotel)");
+                    $stmt->bindParam(':tipo', $tipo);
+                    $stmt->bindParam(':valor', $valorDiaria);
+                    $stmt->bindParam(':hotel', $hotel_id);
+
+                    // Executa a query
+                    $stmt->execute();
+
+                    if ($stmt->rowCount() > 0){
+                        $stm_hotel = $conn->prepare("UPDATE hotel set qtdeQuartos=:qtdeQuartos WHERE id=:id");
+                        $stm_hotel->bindParam(":qtdeQuartos", '(SELECT COUNT(id) FROM quartos WHERE id='.$hotel_id.')');
+                        $stm_hotel->bindParam(":id", $hotel_id);
+    
+                        $stm_hotel->execute();    
+                    } 
+
+                    $result = array('code' => 1, 'message'=> 'Quarto incluído com sucesso');
+                
+                } else {
+                    $result = array('code' => 0, 'message'=> 'Nenhum Hotel foi cadastrado no sistema para atribuir esse quarto!!');
+                }
+                
 
             } catch(PDOException $e) {
                 $result = array('code' => 0, 'message'=> 'Houve um erro na inclusão do quarto!Erro: '.$e->getMessage());
             }
 
+            $stmt_check = null;
+            $stm_hotel = null;
             $stmt = null;
             $conn = null;
 

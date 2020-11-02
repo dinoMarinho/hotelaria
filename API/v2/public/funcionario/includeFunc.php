@@ -41,6 +41,11 @@
         $validate = true;
     }
 
+    if (is_null($hotel_id) or !is_numeric($hotel_id)) {
+        $msg .= 'A identificação do hotel está vazia ou é inválida,';
+        $validate = true;
+    }
+
     $msg .= 'por favor corrija os dados e tente novamente!';
 
     if ($validate) {
@@ -52,7 +57,7 @@
 
     $Funcionario = new Funcionario($conn);
 
-    $result = $Funcionario->include($name, $mail, $f_password);
+    $result = $Funcionario->include($name, $mail, $f_password,$hotel_id);
 
     $Log = new Log($conn);
 

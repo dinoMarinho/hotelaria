@@ -32,7 +32,7 @@
             return $password_hash; 
         }
 
-        public function include($name,$mail,$password){
+        public function include($name,$mail,$password,$hotel_id){
             // Pega os dados da conexão com a base de dados
             $conn = $this->getConn();
 
@@ -48,10 +48,11 @@
                 // Verifica se o usuário já foi cadastrado
                 if ($stmt_check->rowCount() == 0) {
                     // Insere o usuário no banco de dados
-                    $stmt = $conn->prepare("INSERT INTO funcionarios (nome, email, senha) VALUES (:nome, :email, :senha)");
+                    $stmt = $conn->prepare("INSERT INTO funcionarios (nome, email, senha,hotel_id) VALUES (:nome, :email, :senha,:hotel_id)");
                     $stmt->bindParam(':nome', $name);
                     $stmt->bindParam(':email', $mail);
                     $stmt->bindParam(':senha', $password);
+                    $stmt->bindParam(':hotel_id', $hotel_id);
 
                     // Executa a query
                     $stmt->execute();
@@ -134,7 +135,8 @@
                     'code' => 1, 
                     'name'  => $info['name'],
                     'email' => $info['email'],
-                    'comission' => $info['comission']
+                    'comission' => $info['comission'],
+                    'hotelID' => $info['hotelID']
                 );
             } else {
                 $result = array('code' => 0, 'message'=> $info['message']);
@@ -143,7 +145,7 @@
             return $result;
         }
 
-        public function includeComission($id,$value){
+        public function includeComission($id,$value,$hotel_id){
              // Pega as informações do funcinário
              $info = $this->information($id);
 
@@ -166,6 +168,12 @@
 
                         // Verifica se o usuário existe
                         if ($stmt->rowCount() > 0) {
+                            $stm_hotel = $conn->prepare("UPDATE hotel set comissaoGeral=:comissaoGeral WHERE id=:id");
+                            $stm_hotel->bindParam(":comissaoGeral", '(SELECT SUM(comissao) AS total FROM funcionarios)');
+                            $stm_hotel->bindParam(":id",$hotel_id );
+    
+                            $stm_hotel->execute();
+
                             $result = array('code' => 1, 'message'=> 'A comissão foi adicionada com sucesso!');
                         } else {
                             $result = array('code' => 0, 'message'=> 'Houve um erro ao incluir a comissão no funcinário!');
@@ -173,7 +181,8 @@
                     }catch(PDOException $e){
                         $result = array('code' => 0, 'message'=> 'Houve um erro na tentativa de buscar dados no banco de dados!Erro: '.$e->getMessage());
                     }
-                            
+                     
+                    $stm_hotel = null;
                     $stmt = null;
                     $conn = null;
 
@@ -221,6 +230,7 @@
                             'email' => $row['email'],
                             'password' => $row['senha'],
                             'comission' => $row['comissao'],
+                            'hotelID' => $info['hotel_id']
                         );
                    }
                    
