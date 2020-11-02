@@ -1,4 +1,4 @@
-![PHP and MySql](https://lh3.googleusercontent.com/proxy/BMVyXlyiejS30FP1hLSv0KsQM922f5DVi_uQ8NhcDs9IuJo45JSTg-1DTaD4jHv_wmiKyR-_cQ4vn-AP8MfUQoX0fkq6OmdqvnOiu24Ihr_Ske8giDn2yKGRee1ftsSYC1VDoC-X-w)
+![PHP and MySql](https://kroton.vteximg.com.br/arquivos/ids/156096-500-326/image-b041dffabd7b4dd5a3bda8c9a5cf5377.jpg?v=636003860955930000)
 # API Hotelaria
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
