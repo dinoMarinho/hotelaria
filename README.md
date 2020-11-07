@@ -29,11 +29,13 @@ $ .../API/funcionario/<...>.php
 
 | Página | Entradas | Saídas |
 | ------ | ------ | ------ |
-| validateFunc.php | E-mail e senha | Code, id, name, mail e  menssage |
-| includeFunc.php | Nome, e-mail, senha e ID do hotel | Code e menssage |
-| getInfoFunc.php | ID | Code, name, email, comission e message |
-| deleteFunc.php | ID | Code e menssage |
-| InsertComissionFunc.php | ID, Valor da comissão e ID do hotel | Code e menssage |
+| validateFunc.php | E-mail(mail) e senha(password) | Code, id, name, mail e  menssage |
+| includeFunc.php | Nome(name), e-mail(mail), senha(password) e ID do hotel(hotel_id) | Code e menssage |
+| getInfoFunc.php | ID(id) | Code, name, email, comission e message |
+| deleteFunc.php | ID(id) | Code e menssage |
+| InsertComissionFunc.php | ID(id), Valor da comissão(value) e ID do hotel(hotel_id) | Code e menssage |
+
+**Lembrando que é necessário ter um Hotel cadastrado no sistema, para atribuir ao funcionário**
 
 # Quarto
 Para acessar as informações dos quartos é necessário utilizar:
@@ -43,9 +45,11 @@ $ .../API/quarto/<...>.php
 
 | Página | Entradas | Saídas |
 | ------ | ------ | ------ |
-| getQuarto.php | ID | Tipo, valorDiária e lucroOp |
-| includeQuarto.php | ID do hotel, tipo e valorDiária | Code e menssage |
-| includeLucro.php | ID e valor do Lucro | Code e menssage |
+| getQuarto.php | ID(id) | Tipo, valorDiária e lucroOp |
+| includeQuarto.php | ID do hotel(hotel), tipo(tipo) e valorDiária(valorDiaria) | Code e menssage |
+| includeLucro.php | ID do Quarto(id) e valor do Lucro(value) | Code e menssage |
+
+**Lembrando que é necessário ter um Hotel cadastrado no sistema, para atribuir ao quarto**
 
 # Hotel
 Para acessar as informações do hotel é necessário utilizar:
@@ -55,12 +59,12 @@ $ .../API/hotel/<...>.php
 
 | Página | Entradas | Saídas |
 | ------ | ------ | ------ |
-| getHotel.php | ID | Code, id, receita, qtdeQuartos, lucro, comissaoGeral, quartosVendidos, nome |
-| includeHotel.php | Nome | Code e menssage |
-| updateReceita.php | ID e Valor da receita | Code e menssage |
-| updateLucro.php | ID e Valor do Lucro | Code e menssage |
-| updateQuartosVendidos.php | ID e Valor da quantidade de quartos vendidos | Code e menssage |
-| revPar.php | ID do hotel | Code, menssage e value |
-| netRevPar.php | ID do hotel | Code, menssage e value |
-| diariaMedia.php | ID do hotel | Code, menssage e value |
-| taxaOcupacao.php | ID do hotel | Code, menssage e value |
+| getHotel.php | ID(id) | Code, id, receita, qtdeQuartos, lucro, comissaoGeral, quartosVendidos, nome |
+| includeHotel.php | Nome(name) | Code e menssage |
+| updateReceita.php | ID(id) e Valor da receita(value) | Code e menssage |
+| updateLucro.php | ID(id) e Valor do Lucro(value) | Code e menssage |
+| updateQuartosVendidos.php | ID(id) e Valor da quantidade de quartos vendidos(value) | Code e menssage |
+| revPar.php | ID do hotel(id) | Code, menssage e value |
+| netRevPar.php | ID do hotel(id) | Code, menssage e value |
+| diariaMedia.php | ID do hotel(id) | Code, menssage e value |
+| taxaOcupacao.php | ID do hotel(id) | Code, menssage e value |
